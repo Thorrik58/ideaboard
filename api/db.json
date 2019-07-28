@@ -1,0 +1,22 @@
+{
+  "ideas": [
+    {
+      "id": 1,
+      "created_date": "2019-28-07T14:55:00Z",
+      "title": "Idea number one",
+      "body": "some text"
+    },
+    {
+      "id": 2,
+      "created_date": "2019-28-07T14:55:00Z",
+      "title": "Idea number two",
+      "body": "some text"
+    },
+    {
+      "id": 3,
+      "created_date": "2019-28-07T14:55:00Z",
+      "title": "Idea number three",
+      "body": "some text"
+    }
+  ]
+}
