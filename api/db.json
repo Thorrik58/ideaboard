@@ -1,22 +1,52 @@
 {
   "ideas": [
     {
-      "id": 1,
-      "created_date": "2019-28-07T14:55:00Z",
-      "title": "Idea number one",
-      "body": "some text"
+      "title": "test",
+      "body": "some more text",
+      "created_date": 1564339063364,
+      "id": 1
     },
     {
-      "id": 2,
-      "created_date": "2019-28-07T14:55:00Z",
-      "title": "Idea number two",
-      "body": "some text"
+      "title": "test",
+      "body": "some more text",
+      "created_date": 1564339065618,
+      "id": 2
     },
     {
-      "id": 3,
-      "created_date": "2019-28-07T14:55:00Z",
-      "title": "Idea number three",
-      "body": "some text"
+      "title": "test",
+      "body": "some more text",
+      "created_date": 1564339067163,
+      "id": 3
+    },
+    {
+      "title": "test",
+      "body": "some more text",
+      "created_date": 1564339067321,
+      "id": 4
+    },
+    {
+      "title": "test",
+      "body": "some more text",
+      "created_date": 1564339067580,
+      "id": 5
+    },
+    {
+      "title": "test",
+      "body": "some more text",
+      "created_date": 1564339067726,
+      "id": 6
+    },
+    {
+      "title": "test",
+      "body": "some more text",
+      "created_date": 1564339067863,
+      "id": 7
+    },
+    {
+      "title": "test",
+      "body": "some more text",
+      "created_date": 1564339068299,
+      "id": 9
     }
   ]
 }

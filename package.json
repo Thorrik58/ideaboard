@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "mock:api": "json-server --watch api/db.json --port 4000",      
+    "mock:api": "json-server --watch api/db.json --port 4000",
     "dev": "next",
     "build": "next build",
     "start": "next start"
@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
+    "isomorphic-unfetch": "^3.0.0",
     "json-server": "^0.15.0",
     "next": "^9.0.2",
     "node-sass": "^4.12.0",
