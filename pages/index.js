@@ -7,11 +7,11 @@ import fetch from 'isomorphic-unfetch'
 class App extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       cards: this.props.data,
-      additionalIdeasCount: 0 
+      cardAdded: false
     }
+    this.onClickCard = this.onClickCard.bind(this)
   }
 
   static async getInitialProps() {
@@ -20,9 +20,16 @@ class App extends Component {
     return { data }
   }
 
+  removeIdeaById(index) {
+    var array = [...this.state.cards]; // make a separate copy of the array
+    array.splice(index, 1);
+    this.setState({cards: array});
+  }
+
   // Should handle all edits and removal of cards
-  onClickCard(id, title, creationDate, body, clickType) {
+  onClickCard(id, title, creationDate, body, clickType, index) {
     if (clickType === 'delete') {
+      this.removeIdeaById(index)
       fetch('http://localhost:4000/ideas/'+id, {
       method: 'DELETE',
       headers: {
@@ -42,9 +49,9 @@ class App extends Component {
     }
   }
 
-  onClickAdd() {
-    this.setState({cards: this.state.cards.concat({title: "Title", body: "Temporary body", created_date: new Date().getTime(), id: 123})
-  })
+  addIdea() {
+    this.setState({cards: this.state.cards.concat({title: "", body: "", created_date: new Date().getTime(), id: 123, isNewCard: true}), cardAdded: true})
+  }
     // fetch('http://localhost:4000/ideas', {
     //   method: 'POST',
     //   headers: {
@@ -54,20 +61,23 @@ class App extends Component {
     // }).then( r => {
     //   console.log(r.status)
     // })
-  }
+  // }
 
   render() {
+    
     return (
       <div className={ styles.cardContainer }>
-        {this.state.cards.map((idea, key) => 
+        {this.state.cards.map((idea, key, index) => 
           <IdeaCard 
             key={key}
             id={idea.id}
             title={idea.title}
             body={idea.body}
             creationDate={idea.created_date}
-            onClick={this.onClickCard}/>)}
-        <button onClick={() => { this.onClickAdd()}}>Add New Idea</button>
+            onClick={this.onClickCard}
+            index={index}
+            isNewCard={this.state.cardAdded}/>)}
+        <button className={styles.card} onClick={() => { this.addIdea() }}>Add New Idea</button>
       </div>
     )
   }
