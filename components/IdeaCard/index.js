@@ -19,13 +19,13 @@ class IdeaCard extends Component {
 
   render() {
     const { onClick, id, title, creationDate, body, index } = this.props
+    const characterLimit = 140
     return (
         <div className={ styles.card } >
-          <button onClick={()=>{ onClick(id, title, creationDate, body, 'delete', index)}}>
+          <button className={styles.delete_button} onClick={()=>{ onClick(id, title, creationDate, body, 'delete', index)}}>
             x
           </button>          
           <label>
-            Title:
             <input
               type="text"
               value={this.state.title}
@@ -35,12 +35,16 @@ class IdeaCard extends Component {
             />
           </label>
           <label>
-            Body:
-            <input
+            <textarea
+              rows={6}
               type="text"
               value={this.state.body}
+              maxLength={characterLimit}
               onChange={e => this.handleChange(e, "body")}
             />
+            { characterLimit - this.state.body.length < 15?
+            <p>{this.state.body.length } / {characterLimit}</p>
+            : null}
           </label>
         </div>
     );

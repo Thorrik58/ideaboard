@@ -1,12 +1,25 @@
 .card {
   display: flex;
   flex-direction: column;
-  background: blue;
+  background: white;
+  border: 1px solid black;
   width: 150px;
   height: 150px;
   margin: 10px;
+
+  .delete_button {
+    visibility: hidden
+  }
+  &:hover .delete_button {
+    visibility: visible;
+  }
+}
+
+.character_counter {
+  font-size: 5px;
 }
 
 p {
   margin: 0;
 }
+
