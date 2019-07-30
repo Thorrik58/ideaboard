@@ -47,8 +47,9 @@ class IdeaCard extends Component {
               onChange={e => this.handleChange(e, "body")}
             />
             { this.state.focusedBody && characterLimit - this.state.body.length < 15?
-            <p>{this.state.body.length } / {characterLimit}</p>
-            : null}
+              <p>{this.state.body.length } / {characterLimit}</p>
+              : null
+            }
         </div>
     );
   }
