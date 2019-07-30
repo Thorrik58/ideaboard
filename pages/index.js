@@ -20,14 +20,44 @@ class App extends Component {
     return { data }
   }
 
-  removeIdeaById(index) {
-    var array = [...this.state.cards];
-    array.splice(index, 1);
-    this.setState({cards: array});
+  removeIdeaById(id) {
+    var dno = [...this.state.cards];
+    var found
+    for (var i = 0; i < dno.length; i++) {      
+      if (dno[i].id === id) {
+        found = i;
+        break
+      }
+      else {
+        found = -1
+      }
+    }
+    dno.splice(found, 1);
+    this.setState({cards: dno});
+  }
+
+   updateIdeaById(title, body, id) {
+    var dno = [...this.state.cards];
+    var found
+    for (var i = 0; i < dno.length; i++) {      
+      if (dno[i].id === id) {
+        found = i;
+        break
+      }
+      else {
+        found = -1
+      }
+    }
+    console.log(body)
+    dno[found].body = body
+    console.log(title)
+    dno[found].title = title
+    console.log(dno[found])
+    this.setState({cards: dno});
   }
 
   // Should handle all edits and removal of cards
-  onClickCard(id, title, creationDate, body, clickType, index) {
+  onClickCard(id, title, creationDate, body, clickType) {
     if (clickType === 'delete') {
       fetch('http://localhost:4000/ideas/'+id, {
       method: 'DELETE',
@@ -35,23 +65,33 @@ class App extends Component {
         'Content-Type': 'application/json'
       },
       }).then( r => {
-        console.log(r.status)
         if (r.status === 200) {
+          console.log('remove '+id)
           // Remove id if successful
-          this.removeIdeaById(index)
+          this.removeIdeaById(id)
         } else {
           // eslint-disable-next-line no-console
-          console.log(r.status)
         }
       })
     }
     if (clickType === 'edit') {
-      // eslint-disable-next-line no-console
-      console.log('edit '+ id + ' ' + title + ' ' + creationDate + ' ' + body)
+      fetch('http://localhost:4000/ideas/'+id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title: title, body: body, created_date: creationDate, id: id})
+      }).then( r => {
+        if (r.status === 200) {
+          this.updateIdeaById(title, body, id)
+        } else {
+          // eslint-disable-next-line no-console
+        }
+      })
     }
     else {
       // eslint-disable-next-line no-console
-      console.log('clicked '+ id + ' ' + title + ' ' + creationDate + ' ' + body)
+      // console.log('clicked '+ id + ' ' + title + ' ' + creationDate + ' ' + body)
     }
   }
 
@@ -74,8 +114,8 @@ class App extends Component {
       },
       body: JSON.stringify({ title: '', body: '', created_date: data.created_date, id: id})
     }).then( r => {
-      console.log(r.status)
       if (r.status === 201) {
+        console.log('add '+id)
         // If successful add to state array to reflect changes right away
         this.setState({cards: this.state.cards.concat({title: "", body: "", created_date: data.created_date, id: id, isNewCard: true}), cardAdded: true})
       }
@@ -86,18 +126,17 @@ class App extends Component {
   // }
 
   render() {
-    
+    console.log(this.state.cards)
     return (
       <div className={ styles.cardContainer }>
-        {this.state.cards.map((idea, key, index) => 
+        {this.state.cards.map((idea) => 
           <IdeaCard 
-            key={key}
+            key={idea.id}
             id={idea.id}
             title={idea.title}
             body={idea.body}
             creationDate={idea.created_date}
             onClick={this.onClickCard}
-            index={index}
             isNewCard={this.state.cardAdded}/>)}
         <button className={styles.card} onClick={() => { this.addIdea() }}>Add New Idea</button>
       </div>
