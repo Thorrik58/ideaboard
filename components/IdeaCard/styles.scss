@@ -7,6 +7,20 @@
   height: 150px;
   margin: 10px;
 
+  input {
+    border: none;
+  }
+  textArea {
+    border: none;
+    resize: none;
+  }
+  input:focus {
+    outline: 2px solid lightgray;
+  }
+  textArea:focus {
+    outline: 2px solid lightgray;
+  }
+
   .delete_button {
     visibility: hidden
   }

@@ -21,7 +21,7 @@ class App extends Component {
   }
 
   removeIdeaById(index) {
-    var array = [...this.state.cards]; // make a separate copy of the array
+    var array = [...this.state.cards];
     array.splice(index, 1);
     this.setState({cards: array});
   }
@@ -29,7 +29,6 @@ class App extends Component {
   // Should handle all edits and removal of cards
   onClickCard(id, title, creationDate, body, clickType, index) {
     if (clickType === 'delete') {
-      this.removeIdeaById(index)
       fetch('http://localhost:4000/ideas/'+id, {
       method: 'DELETE',
       headers: {
@@ -37,6 +36,13 @@ class App extends Component {
       },
       }).then( r => {
         console.log(r.status)
+        if (r.status === 200) {
+          // Remove id if successful
+          this.removeIdeaById(index)
+        } else {
+          // eslint-disable-next-line no-console
+          console.log(r.status)
+        }
       })
     }
     if (clickType === 'edit') {
@@ -50,17 +56,33 @@ class App extends Component {
   }
 
   addIdea() {
-    this.setState({cards: this.state.cards.concat({title: "", body: "", created_date: new Date().getTime(), id: 123, isNewCard: true}), cardAdded: true})
+    // Get new id and creation date
+    fetch('http://localhost:4000/new', {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then( r => r.json() )
+    .then( data => {
+      // hack to get unique id
+      const id = data.id + Math.floor(Math.random() * Math.floor(100))
+      // Post new idea with blank body and title
+      fetch('http://localhost:4000/ideas', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title: '', body: '', created_date: data.created_date, id: id})
+    }).then( r => {
+      console.log(r.status)
+      if (r.status === 201) {
+        // If successful add to state array to reflect changes right away
+        this.setState({cards: this.state.cards.concat({title: "", body: "", created_date: data.created_date, id: id, isNewCard: true}), cardAdded: true})
+      }
+    })
+    });
   }
-    // fetch('http://localhost:4000/ideas', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ title: 'test', body: 'some more text', created_date: new Date().getTime()})
-    // }).then( r => {
-    //   console.log(r.status)
-    // })
+
   // }
 
   render() {
