@@ -20,9 +20,9 @@ class App extends Component {
     return { data }
   }
 
-  sortArray(sortType) {
+  sortArray(e) {
     var arr = [...this.state.cards];
-    if (sortType === 'alphabet') {
+    if (e.target.value === 'alphabet') {
       arr.sort(function(a, b){
         if(a.title < b.title) { return -1; }
         if(a.title > b.title) { return 1; }
@@ -30,7 +30,7 @@ class App extends Component {
       })
       this.setState({cards: arr});
     }
-    if (sortType === 'date') {
+    if (e.target.value === 'date') {
       arr.sort(function(a, b){
         if(a.created_date < b.created_date) { return -1; }
         if(a.created_date > b.created_date) { return 1; }
@@ -146,8 +146,13 @@ class App extends Component {
             onClick={this.onClickCard}
             isNewCard={this.state.cardAdded}/>)}
         <button className={styles.add_idea_btn} onClick={() => { this.addIdea() }}><p>Add New Idea</p></button>
-        <button className={styles.add_idea_btn} onClick={() => { this.sortArray('alphabet') }}><p>Sort alphabet</p></button>
-        <button className={styles.add_idea_btn} onClick={() => { this.sortArray('date') }}><p>Sort by date </p></button>
+        <form >
+          <select
+          onChange={(e) => {this.sortArray(e)}}>
+            <option value="alphabet">Sort by alphabet</option>
+            <option value="date">Sort by date</option>
+          </select>
+        </form>
       </div>
     )
   }
