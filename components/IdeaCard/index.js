@@ -25,7 +25,6 @@ class IdeaCard extends Component {
           <button className={styles.delete_button} onClick={()=>{ onClick(id, title, creationDate, body, 'delete')}}>
             x
           </button>          
-            <p>{this.props.id}</p>
             <input
               type="text"
               placeholder="Title"
@@ -40,10 +39,14 @@ class IdeaCard extends Component {
               placeholder="Body"
               value={this.state.body}
               maxLength={characterLimit}
-              onBlur={()=>{ onClick(id, this.state.title, creationDate, this.state.body, 'edit')}}
+              onBlur={()=>{ 
+                onClick(id, this.state.title, creationDate, this.state.body, 'edit')
+                this.setState({focusedBody: false})
+              }}
+              onFocus={()=>{ this.setState({focusedBody: true})}}
               onChange={e => this.handleChange(e, "body")}
             />
-            { characterLimit - this.state.body.length < 15?
+            { this.state.focusedBody && characterLimit - this.state.body.length < 15?
             <p>{this.state.body.length } / {characterLimit}</p>
             : null}
         </div>

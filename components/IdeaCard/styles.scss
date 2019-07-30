@@ -22,7 +22,9 @@
   }
 
   .delete_button {
-    visibility: hidden
+    visibility: hidden;
+    border-radius: 25px;
+    align-self: flex-end;
   }
   &:hover .delete_button {
     visibility: visible;

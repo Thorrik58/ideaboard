@@ -20,11 +20,32 @@ class App extends Component {
     return { data }
   }
 
+  sortArray(sortType) {
+    var arr = [...this.state.cards];
+    if (sortType === 'alphabet') {
+      arr.sort(function(a, b){
+        if(a.title < b.title) { return -1; }
+        if(a.title > b.title) { return 1; }
+        return 0;
+      })
+      this.setState({cards: arr});
+    }
+    if (sortType === 'date') {
+      arr.sort(function(a, b){
+        if(a.created_date < b.created_date) { return -1; }
+        if(a.created_date > b.created_date) { return 1; }
+        return 0;
+        })
+      this.setState({cards: arr});
+    }
+  }
+
+
   removeIdeaById(id) {
-    var dno = [...this.state.cards];
+    var arr = [...this.state.cards];
     var found
-    for (var i = 0; i < dno.length; i++) {      
-      if (dno[i].id === id) {
+    for (var i = 0; i < arr.length; i++) {      
+      if (arr[i].id === id) {
         found = i;
         break
       }
@@ -32,31 +53,23 @@ class App extends Component {
         found = -1
       }
     }
-    dno.splice(found, 1);
-    this.setState({cards: dno});
+    arr.splice(found, 1);
+    this.setState({cards: arr});
   }
 
    updateIdeaById(title, body, id) {
-    var dno = [...this.state.cards];
-    var found
-    for (var i = 0; i < dno.length; i++) {      
-      if (dno[i].id === id) {
-        found = i;
+    var arr = [...this.state.cards];
+    for (var i = 0; i < arr.length; i++) {      
+      if (arr[i].id === id) {
+        arr[i].body = body
+        arr[i].title = title
         break
       }
-      else {
-        found = -1
-      }
     }
-    console.log(body)
-    dno[found].body = body
-    console.log(title)
-    dno[found].title = title
-    console.log(dno[found])
-    this.setState({cards: dno});
+    this.setState({cards: arr});
   }
 
-  // Should handle all edits and removal of cards
+  // Handles all edits and removal of cards
   onClickCard(id, title, creationDate, body, clickType) {
     if (clickType === 'delete') {
       fetch('http://localhost:4000/ideas/'+id, {
@@ -66,11 +79,11 @@ class App extends Component {
       },
       }).then( r => {
         if (r.status === 200) {
-          console.log('remove '+id)
           // Remove id if successful
           this.removeIdeaById(id)
         } else {
           // eslint-disable-next-line no-console
+          console.log(r.status)
         }
       })
     }
@@ -86,12 +99,9 @@ class App extends Component {
           this.updateIdeaById(title, body, id)
         } else {
           // eslint-disable-next-line no-console
+          console.log(r.status)
         }
       })
-    }
-    else {
-      // eslint-disable-next-line no-console
-      // console.log('clicked '+ id + ' ' + title + ' ' + creationDate + ' ' + body)
     }
   }
 
@@ -104,29 +114,26 @@ class App extends Component {
       }
     }).then( r => r.json() )
     .then( data => {
-      // hack to get unique id
+      // hack to get unique id since im using a mocker
       const id = data.id + Math.floor(Math.random() * Math.floor(100))
+      const createdDate = data.created_date + Math.floor(Math.random() * Math.floor(100000))
       // Post new idea with blank body and title
       fetch('http://localhost:4000/ideas', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ title: '', body: '', created_date: data.created_date, id: id})
+      body: JSON.stringify({ title: '', body: '', created_date: createdDate, id: id})
     }).then( r => {
       if (r.status === 201) {
-        console.log('add '+id)
         // If successful add to state array to reflect changes right away
-        this.setState({cards: this.state.cards.concat({title: "", body: "", created_date: data.created_date, id: id, isNewCard: true}), cardAdded: true})
+        this.setState({cards: this.state.cards.concat({title: "", body: "", created_date: createdDate, id: id, isNewCard: true}), cardAdded: true})
       }
     })
     });
   }
 
-  // }
-
   render() {
-    console.log(this.state.cards)
     return (
       <div className={ styles.cardContainer }>
         {this.state.cards.map((idea) => 
@@ -138,7 +145,9 @@ class App extends Component {
             creationDate={idea.created_date}
             onClick={this.onClickCard}
             isNewCard={this.state.cardAdded}/>)}
-        <button className={styles.card} onClick={() => { this.addIdea() }}>Add New Idea</button>
+        <button className={styles.add_idea_btn} onClick={() => { this.addIdea() }}><p>Add New Idea</p></button>
+        <button className={styles.add_idea_btn} onClick={() => { this.sortArray('alphabet') }}><p>Sort alphabet</p></button>
+        <button className={styles.add_idea_btn} onClick={() => { this.sortArray('date') }}><p>Sort by date </p></button>
       </div>
     )
   }
