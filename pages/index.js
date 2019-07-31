@@ -69,6 +69,13 @@ class App extends Component {
     this.setState({cards: arr});
   }
 
+  showSnackBar() {
+    this.setState({showSnackBar: true})
+    setTimeout(() => {
+      this.setState({showSnackBar: false})
+    }, 3000)
+  }
+
   // Handles all edits and removal of cards
   onClickCard(id, title, creationDate, body, clickType) {
     if (clickType === 'delete') {
@@ -96,6 +103,7 @@ class App extends Component {
       body: JSON.stringify({ title: title, body: body, created_date: creationDate, id: id})
       }).then( r => {
         if (r.status === 200) {
+          this.showSnackBar()
           this.updateIdeaById(title, body, id)
         } else {
           // eslint-disable-next-line no-console
@@ -153,6 +161,7 @@ class App extends Component {
             <option value="date">Sort by date</option>
           </select>
         </form>
+        <div className={this.state.showSnackBar ? styles.snack_bar_show : styles.snack_bar}>Success</div>
       </div>
     )
   }
